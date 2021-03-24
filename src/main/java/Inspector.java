@@ -5,7 +5,10 @@ public class Inspector {
     private ArrayList<Component> components;
 
     public Inspector(){}
-    public void performMaintenance(){}
+    public void performMaintenance(){
+        //Check the inspectors current status then follow the necessary algorithm for
+        //adding a component to an open workstation buffer.
+    }
     public void addComponent(Component c){
         components.add(c);
     }

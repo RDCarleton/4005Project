@@ -60,7 +60,7 @@ public class Control {
 			//Set inspectors status as busy
 			inspector1.setStatus(1);
 			//Set a time to work on this component 
-			inspector1.setRemainingTime((int) (calculateInspectionTime(1) * 1000));	
+			inspector1.setRemainingTime((int) (calculateInspectionTime(1) * 60000));	
 			System.out.println("["+sim_time_ms+"] Inspector 1 is getting a component, inspection time: " + inspector1.getRemainingTime());
 		} 
 		
@@ -78,12 +78,15 @@ public class Control {
 			
 		}  
 		// May or may not exist as an else if??
-		if (inspector1.getStatus() == 3) {
+		if (inspector1.getStatus() == 2) {
 			//Inspector1 is blocked at this time
-			int idleTime = inspector1.getIdleTime_ms();
-			inspector1.setIdleTime_ms(idleTime+1);
-			inspector1_totalIdleTime++;
-			
+			//Attempt to finish component, if blocked add to block time
+			finishComponent(inspector1, inspector1.getComponent());
+			if (inspector1.getStatus() == 2) {
+				int idleTime = inspector1.getIdleTime_ms();
+				inspector1.setIdleTime_ms(idleTime+1);
+				inspector1_totalIdleTime++;
+			}
 		}
 		
 		
@@ -98,7 +101,7 @@ public class Control {
 			//Set inspectors status as busy
 			inspector2.setStatus(1);
 			//Set a time to work on this component 
-			inspector2.setRemainingTime((int) (calculateInspectionTime(randComponent) * 1000));	
+			inspector2.setRemainingTime((int) (calculateInspectionTime(randComponent) * 60000));	
 			System.out.println("["+sim_time_ms+"] Inspector 2 is getting a component, inspection time: " + inspector2.getRemainingTime());
 		}
 		
@@ -117,7 +120,7 @@ public class Control {
 			
 		}
 		
-		if (inspector2.getStatus() == 3) {
+		if (inspector2.getStatus() == 2) {
 			//Inspector2 is blocked at this time
 			int idleTime = inspector2.getIdleTime_ms();
 			inspector2.setIdleTime_ms(idleTime+1);
@@ -132,7 +135,7 @@ public class Control {
 		if (workstation1.getStatus() == 0) {
 			if (workstation1.canMake(1)) {
 				workstation1.setStatus(1);
-				workstation1.setProcessingTime((int) (calculateProcessingTime(1) * 1000));
+				workstation1.setProcessingTime((int) (calculateProcessingTime(1) * 60000));
 				System.out.println("["+sim_time_ms+"]["+sim_time_ms+"] WS1 is beginning to process an item at time " + sim_time_ms +", time remaining: " + workstation1.getProcessTime());
 				System.out.println("["+sim_time_ms+"]["+sim_time_ms+"] WS1 buffer size: " + workstation1.getBufferSize(1));
 			}
@@ -150,7 +153,7 @@ public class Control {
 		
 		if (workstation2.getStatus() == 0 && workstation2.canMake(2)) {
 			workstation2.setStatus(1);
-			workstation2.setProcessingTime((int) (calculateProcessingTime(2) * 1000));
+			workstation2.setProcessingTime((int) (calculateProcessingTime(2) * 60000));
 			System.out.println("["+sim_time_ms+"] WS2 is beginning to process an item at time " + sim_time_ms +", time remaining: " + workstation2.getProcessTime());
 			System.out.println("["+sim_time_ms+"] WS2 buffer1 size: "+ workstation2.getBufferSize(1) +", WS2 buffer2 size: " + workstation2.getBufferSize(2));
 		} else if (workstation2.getStatus() == 1) {
@@ -168,7 +171,7 @@ public class Control {
 		
 		if (workstation3.getStatus() == 0 && workstation3.canMake(3)) {
 			workstation3.setStatus(1);
-			workstation3.setProcessingTime((int) (calculateProcessingTime(3) * 1000));
+			workstation3.setProcessingTime((int) (calculateProcessingTime(3) * 60000));
 			System.out.println("["+sim_time_ms+"] WS3 is beginning to process an item at time " + sim_time_ms +", time remaining: " + workstation3.getProcessTime());
 			System.out.println("["+sim_time_ms+"] WS3 buffer1 size: "+ workstation3.getBufferSize(1) +", WS3 buffer3 size: " + workstation3.getBufferSize(3));
 		} else if (workstation3.getStatus() == 1) {
@@ -291,7 +294,7 @@ public class Control {
 				} else {
 					System.out.println("["+sim_time_ms+"] Inspector 1 is blocked!");
 					//set status to block
-					inspector.setStatus(3);
+					inspector.setStatus(2);
 				}
 			
 		} else if (comp.getComponentNum() == 2) {
@@ -311,7 +314,7 @@ public class Control {
 				} else {
 					System.out.println("["+sim_time_ms+"] Inspector 2 is blocked with component 2!");
 					//set status to block
-					inspector.setStatus(3);
+					inspector.setStatus(2);
 				}
 				
 		} else if (comp.getComponentNum() == 3) {
@@ -326,7 +329,7 @@ public class Control {
 			} else {
 				System.out.println("["+sim_time_ms+"] Inspector 2 is blocked with component 3!");
 				//set status to block
-				inspector.setStatus(3);
+				inspector.setStatus(2);
 			}
 		}
 	}

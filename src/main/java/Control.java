@@ -269,7 +269,6 @@ public class Control {
 		if (comp.getComponentNum() == 1){
 			//Component 1 is routed to the buffer with smallest number of components in waiting
 			//For ties, priority is: W1 > W2 > W3
-			System.out.println("["+sim_time_ms+"] Component 1 has been inspected");
 			//set status back to idle
 			inspector.setStatus(0);
 			//Check where to send component
@@ -281,18 +280,24 @@ public class Control {
 			//if buffers are full, inspector is blocked
 				if (bufferSize1 == 0) {
 					workstation1.addToBuffer(comp);
+					System.out.println("["+sim_time_ms+"] Component 1 has been inspected, sent to WS1, buffer size: " + workstation1.getBufferSize(1));
 				} else if (bufferSize2 == 0) {
 					workstation2.addToBuffer(comp);
+					System.out.println("["+sim_time_ms+"] Component 1 has been inspected, sent to WS2, buffer size: " + workstation2.getBufferSize(1));
 				} else if (bufferSize3 == 0) {
 					workstation3.addToBuffer(comp);
+					System.out.println("["+sim_time_ms+"] Component 1 has been inspected, sent to WS3, buffer size: " + workstation3.getBufferSize(1));
 				} else if (bufferSize1 == 1) {
 					workstation1.addToBuffer(comp);
+					System.out.println("["+sim_time_ms+"] Component 1 has been inspected, sent to WS1, buffer size: " + workstation1.getBufferSize(1));
 				} else if (bufferSize2 == 1) {
 					workstation2.addToBuffer(comp);
+					System.out.println("["+sim_time_ms+"] Component 1 has been inspected, sent to WS2, buffer size: " + workstation2.getBufferSize(1));
 				} else if (bufferSize3 == 1) {
 					workstation3.addToBuffer(comp);
+					System.out.println("["+sim_time_ms+"] Component 1 has been inspected, sent to WS3, buffer size: " + workstation3.getBufferSize(1));
 				} else {
-					System.out.println("["+sim_time_ms+"] Inspector 1 is blocked!");
+					//System.out.println("["+sim_time_ms+"] Inspector 1 is blocked!");
 					//set status to block
 					inspector.setStatus(2);
 				}
@@ -300,7 +305,6 @@ public class Control {
 		} else if (comp.getComponentNum() == 2) {
 			//Component 2 has finished being inspected
 			//For ties, priority is: W1 > W2 > W3
-			System.out.println("["+sim_time_ms+"] Component 2 has been inspected");
 			//temporarily set status back to idle
 			inspector.setStatus(0);
 			//There is only 1 place to send component 2
@@ -309,10 +313,9 @@ public class Control {
 			//if buffers are full, inspector is blocked
 				if (bufferSize < 2 ) {
 					workstation2.addToBuffer(comp);
-					System.out.println("["+sim_time_ms+"] Adding component 2 to buffer2 on WS2. Buffer size is: " + workstation2.getBufferSize(2));
-					
+					System.out.println("["+sim_time_ms+"] Component 2 has been inspected, sent to WS2, buffer size: " + workstation2.getBufferSize(2));
 				} else {
-					System.out.println("["+sim_time_ms+"] Inspector 2 is blocked with component 2!");
+					//System.out.println("["+sim_time_ms+"] Inspector 2 is blocked with component 2!");
 					//set status to block
 					inspector.setStatus(2);
 				}
@@ -320,14 +323,14 @@ public class Control {
 		} else if (comp.getComponentNum() == 3) {
 		
 			//component 3 has finished inspection
-			System.out.println("["+sim_time_ms+"] Component 3 has been inspected");
 			inspector.setStatus(0);
 			int bufferSize = workstation3.getBufferSize(3);
 			
 			if (bufferSize < 2 ) {
 				workstation3.addToBuffer(comp);
+				System.out.println("["+sim_time_ms+"] Component 3 has been inspected, sent to WS3, buffer size: " + workstation3.getBufferSize(3));
 			} else {
-				System.out.println("["+sim_time_ms+"] Inspector 2 is blocked with component 3!");
+				//System.out.println("["+sim_time_ms+"] Inspector 2 is blocked with component 3!");
 				//set status to block
 				inspector.setStatus(2);
 			}

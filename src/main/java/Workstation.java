@@ -14,7 +14,7 @@ public class Workstation {
     }
 
     public int createProduct(){
-        int flag1 = 0, flag2 = 0, flag3 = 0;
+        int flag1 = 0, flag2 = 0;
         int index1 = 0, index2 = 0;
         // handle P1
         if(productNumber==1){
@@ -35,7 +35,7 @@ public class Workstation {
                     index1 = buffers.indexOf(c);
                 }
                 if (c.getComponentType()==2){
-                    flag3 = 1;
+                    flag2 = 1;
                     index2 = buffers.indexOf(c);
                 }
             }
@@ -49,13 +49,13 @@ public class Workstation {
                     index1 = buffers.indexOf(c);
                 }
                 if (c.getComponentType()==3){
-                    flag3 = 1;
+                    flag2 = 1;
                     index2 = buffers.indexOf(c);
                 }
             }
         }
         // if necessary components exist then remove from buffer and return new product
-        if (index1==1 && index2==1){
+        if (flag1==1 && flag2==1){
             buffers.remove(index1);
             buffers.remove(index2);
             return 1;

@@ -1,109 +1,165 @@
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Workstation {
-    private ArrayList<Component> buffers;
-    private int productNumber;
-    private double ws1Lambda;
-    private double ws2Lambda;
-    private double ws3Lambda;
-    Random ws1RNG;
-    Random ws2RNG;
-    Random ws3RNG;
+	//Buffer of size 2 holds components 
+    private ArrayList<Component> buffer1;
+    private ArrayList<Component> buffer2;
+    private ArrayList<Component> buffer3;
+    //flags 1 and 2 signal a component is available at this station. Full flags signal buffer is full
+    private int flag1, flag2, flag3;
+    private int full_flag1, full_flag2, full_flag3;
+    //WorkstationNumber is assigned to each workstation
+    private int workstationNumber;
+    
+    //status: 0=idle, 1=creating a product
+    private int status;
+    //
+    private int full_flag;
+    //Each workstation will process a product for a set period of time
+    private int remainingProcessingTime;
+    //Constructor for workstation. Each workstation makes its respective product (WS1 makes product 1)
+    public Workstation(int workstationNum){
+    	workstationNumber = workstationNum;
+    	
+    	//Set unused buffers to null, initialize flags
+    	if (workstationNum == 1) {
+    		buffer1 = new ArrayList<Component>();
+    		buffer2 = null;
+    		buffer3 = null;
+    		full_flag1 = 0;
+    		full_flag2 = 1;
+    		full_flag3 = 1;
+    		flag1 = 0;
+    		flag2 = 1;
+    		flag3 = 1;
+    	} else if (workstationNum == 2 ){ 
+    		buffer1 = new ArrayList<Component>();
+    		buffer2 = new ArrayList<Component>();
+    		buffer3 = null;
+    		full_flag1 = 0;
+    		full_flag2 = 0;
+    		full_flag3 = 1;
+    		flag1 = 0;
+    		flag2 = 0;
+    		flag3 = 1;
+    	} else if (workstationNum == 3) {
+    		buffer1 = new ArrayList<Component>();
+    		buffer2 = null;
+    		buffer3 = new ArrayList<Component>();
+    		full_flag1 = 0;
+    		full_flag2 = 1;
+    		full_flag3 = 0;
+    		flag1 = 0;
+    		flag2 = 1;
+    		flag3 = 0;
+    	}
+    }
+    
+    //Check and return the size of the buffer
+    public int getBufferSize (int bufferNum) {
+    	int bufferSize = 0;
+        switch (bufferNum) {
+	        case 1: if (buffer1 != null) { bufferSize = buffer1.size(); } 
+	        		break;
+	        case 2: if (buffer2 != null) { bufferSize = buffer2.size(); } 
+					break; 
+	        case 3: if (buffer3 != null) { bufferSize = buffer3.size(); } 
+	        		break;
+	        default: bufferSize = -1;
+	        		break;
+        }
+        return bufferSize;
+    }
+    
 
-    public Workstation(){
-        // Setup all lambda values and initialize all RNGs
-        ws1Lambda = 0.2171;
-        ws2Lambda = 0.2172;
-        ws3Lambda = 0.09015;
-        ws1RNG = new Random();
-        ws2RNG = new Random();
-        ws3RNG = new Random();
-    }
-    public void setProductNumber(int number){
-        productNumber = number;
+    //Add a component to the buffer
+    public void addToBuffer(Component comp){
+        int compNum = comp.getComponentNum();
+        //Add component to the right buffer, based on component#
+        switch (compNum) {
+	        case 1: if (buffer1.size() <2 ) {buffer1.add(comp);} 
+	        		break;
+	        case 2: if (buffer2.size() <2 ) {buffer2.add(comp);} 
+					break; 
+	        case 3:  if (buffer3.size() <2 ) {buffer3.add(comp);} 
+	        		break;
+	        default: break;
+        }
     }
 
-    public void addToBuffer(Component c){
-        buffers.add(c);
+    
+    //returns true if a product can be made
+    public boolean canMake(int workstation) {
+    	
+    	if (workstation == 1) {
+    		if (buffer1 != null && buffer1.size() > 0) {
+    			flag1 = 1 ;
+    		} else {
+    			flag1 = 0;
+    		}
+    	} else if (workstation == 2) {
+    		if (buffer1 != null && buffer1.size() > 0) {
+    			flag1 =1 ;
+    		} else {
+    			flag1 = 0;
+    		}
+    		if (buffer2 != null && buffer2.size() > 0) {
+    			flag2 = 1;
+    		} else {
+    			flag2 = 0;
+    		}
+    		
+    	} else if (workstation == 3) {
+    		if (buffer1 != null && buffer1.size() > 0) {
+    			flag1 =1 ;
+    		} else {
+    			flag1 = 0;
+    		}
+    		if (buffer3 != null && buffer3.size() > 0) {
+    			flag3 = 1;
+    		} else {
+    			flag3 = 0;
+    		}
+    		
+    	}
+    	
+    	
+    	if (flag1 == 1 && flag2 == 1 && flag3 == 1) {
+    		return true;
+    	} else {
+    		return false;
+    	}
     }
-
-    public double ws1RNG(){
-        double randomNum = 0, ws1Time = 0;
-        // Get next int from respective RNG
-        randomNum = ws1RNG.nextInt();
-        // Return time value calculated
-        return calculateTime(ws1Time, randomNum);
+    
+    
+    public void finishProduct(int product) {
+    	
+    	if (product == 1) {
+    		buffer1.remove(buffer1.size()-1);
+    	} else if (product ==2) {
+    		buffer1.remove(buffer1.size()-1);
+    		buffer2.remove(buffer2.size()-1);
+    	} else if (product == 3) {
+    		buffer1.remove(buffer1.size()-1);
+    		buffer3.remove(buffer3.size()-1);
+    	}
+    	status = 0;
     }
-    public double ws2RNG(){
-        double randomNum = 0, ws2Time = 0;
-        // Get next int from respective RNG
-        randomNum = ws2RNG.nextInt();
-        // Return time value calculated
-        return calculateTime(ws2Time, randomNum);
+    
+    public void setProcessingTime (int time_ms) {
+    	remainingProcessingTime = time_ms;
     }
-    public double ws3RNG(){
-        double randomNum = 0, ws3Time = 0;
-        // Get next int from respective RNG
-        randomNum = ws3RNG.nextInt();
-        // Return time value calculated
-        return calculateTime(ws3Time, randomNum);
+    
+    //Time in ms. 
+    public int getProcessTime () {
+    	return remainingProcessingTime;
     }
-    public double calculateTime(double lambda, double randomNum){
-        double time, randomD;
-        // Calc within bound by dividing by max value
-        randomD = randomNum/Integer.MAX_VALUE;
-        // CDF calculation for ws1Time
-        time = (-1/ws1Lambda)*Math.log(1-randomD);
-        return time;
+    
+    public int getStatus() {
+    	return status;
     }
-    public int createProduct(){
-        int flag1 = 0, flag2 = 0;
-        int index1 = 0, index2 = 0;
-        // handle P1
-        if(productNumber==1){
-            for(Component c : buffers){
-                if (c.getComponentType()==1){
-                    index1 = buffers.indexOf(c);
-                    buffers.remove(index1);
-                    return 1;
-                }
-            }
-        }
-        // handle P2
-        else if(productNumber==2){
-            // check if at least 1 C1 and C2 exist, then track index to remove items and create product
-            for(Component c : buffers){
-                if (c.getComponentType()==1){
-                    flag1 = 1;
-                    index1 = buffers.indexOf(c);
-                }
-                if (c.getComponentType()==2){
-                    flag2 = 1;
-                    index2 = buffers.indexOf(c);
-                }
-            }
-        }
-        // handle P3
-        else if(productNumber==3){
-            // check if at least 1 C1 and C3 exist, then track index to remove items and create product
-            for(Component c : buffers){
-                if (c.getComponentType()==1){
-                    flag1 = 1;
-                    index1 = buffers.indexOf(c);
-                }
-                if (c.getComponentType()==3){
-                    flag2 = 1;
-                    index2 = buffers.indexOf(c);
-                }
-            }
-        }
-        // if necessary components exist then remove from buffer and return new product
-        if (flag1==1 && flag2==1){
-            buffers.remove(index1);
-            buffers.remove(index2);
-            return 1;
-        }
-        return 0;
+    
+    public void setStatus(int status) {
+    	this.status = status;
     }
 }

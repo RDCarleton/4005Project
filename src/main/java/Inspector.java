@@ -1,64 +1,52 @@
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Inspector {
+	
+	//Status 0 = idle, 1 = inspecting component;  2 = blocked
     private int status;
-    private ArrayList<Component> components;
-    private double ins1Lambda;
-    private double ins2Lambda;
-    private double ins3Lambda;
-    Random ins1RNG;
-    Random ins2RNG;
-    Random ins3RNG;
+    private int remaining_inspection_time_ms; //in ms
+    private int idlingTime_ms;
+    private Component held_component;
 
-    public Inspector(){
-        ins1Lambda = 0.09654457;
-        ins2Lambda = 0.064363;
-        ins3Lambda = 0.048467;
-        ins1RNG = new Random();
-        ins2RNG = new Random();
-        ins3RNG = new Random();
-    }
-    public void performMaintenance(){
+    public Inspector(){}
+    
+    public void performMaintenance(double time_sec, Component component){
         //Check the inspectors current status then follow the necessary algorithm for
         //adding a component to an open workstation buffer.
+    	
     }
-    public double ins1RNG(){
-        double randomNum = 0, ins1Time = 0;
-        // Get next int from respective RNG
-        randomNum = ins1RNG.nextInt();
-        // Return time value calculated
-        return calculateTime(ins1Time, randomNum);
+    
+  //Changed c to component
+    public void addComponent(Component component){ 
+    	held_component = component;
     }
-    public double ins2RNG(){
-        double randomNum = 0, ins2Time = 0;
-        // Get next int from respective RNG
-        randomNum = ins2RNG.nextInt();
-        // Return time value calculated
-        return calculateTime(ins2Time, randomNum);
+    
+    public Component getComponent() {
+    	return held_component;
     }
-    public double ins3RNG(){
-        double randomNum = 0, ins3Time = 0;
-        // Get next int from respective RNG
-        randomNum = ins3RNG.nextInt();
-        // Return time value calculated
-        return calculateTime(ins3Time, randomNum);
-    }
-    public double calculateTime(double lambda, double randomNum){
-        double time, randomD;
-        // Calc within bound by dividing by max value
-        randomD = randomNum/Integer.MAX_VALUE;
-        // CDF calculation for ws1Time
-        time = (-1/lambda)*Math.log(1-randomD);
-        return time;
-    }
-    public void addComponent(Component c){
-        components.add(c);
-    }
+    
     public int getStatus(){
         return status;
     }
     public void setStatus(int i){
         status = i;
     }
+    
+    public int getRemainingTime() {
+    	return remaining_inspection_time_ms;
+    }
+    
+    public void setRemainingTime(int remaining_time) {
+    	remaining_inspection_time_ms = remaining_time;
+ 
+    }
+    
+    public void setIdleTime_ms(int time) {
+    	idlingTime_ms = time;
+    }
+    
+    public int getIdleTime_ms() {
+    	return idlingTime_ms;
+    }
+    
 }

@@ -1,12 +1,15 @@
+
+
 public class Component {
-    private int componentType;
-
-    public Component(){}
-
-    public int getComponentType() {
-        return componentType;
-    }
-    public void setComponentType(int type){
-        componentType = type;
-    }
+	int comp;
+	
+	public Component(int mycomp) {
+		this.comp = mycomp;
+	}
+	
+	public int getComponentNum () {
+		return comp;
+	}
+	
 }
+

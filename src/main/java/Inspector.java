@@ -23,21 +23,21 @@ public class Inspector {
         //Check the inspectors current status then follow the necessary algorithm for
         //adding a component to an open workstation buffer.
     }
-    public double ws1RNG(){
+    public double ins1RNG(){
         double randomNum = 0, ins1Time = 0;
         // Get next int from respective RNG
         randomNum = ins1RNG.nextInt();
         // Return time value calculated
         return calculateTime(ins1Time, randomNum);
     }
-    public double ws2RNG(){
+    public double ins2RNG(){
         double randomNum = 0, ins2Time = 0;
         // Get next int from respective RNG
         randomNum = ins2RNG.nextInt();
         // Return time value calculated
         return calculateTime(ins2Time, randomNum);
     }
-    public double ws3RNG(){
+    public double ins3RNG(){
         double randomNum = 0, ins3Time = 0;
         // Get next int from respective RNG
         randomNum = ins3RNG.nextInt();

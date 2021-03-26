@@ -1,10 +1,25 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Workstation {
     private ArrayList<Component> buffers;
     private int productNumber;
+    private double ws1Lambda;
+    private double ws2Lambda;
+    private double ws3Lambda;
+    Random ws1RNG;
+    Random ws2RNG;
+    Random ws3RNG;
 
-    public Workstation(){}
+    public Workstation(){
+        // Setup all lambda values and initialize all RNGs
+        ws1Lambda = 0.2171;
+        ws2Lambda = 0.2172;
+        ws3Lambda = 0.09015;
+        ws1RNG = new Random();
+        ws2RNG = new Random();
+        ws3RNG = new Random();
+    }
     public void setProductNumber(int number){
         productNumber = number;
     }
@@ -13,6 +28,35 @@ public class Workstation {
         buffers.add(c);
     }
 
+    public double ws1RNG(){
+        double randomNum = 0, ws1Time = 0;
+        // Get next int from respective RNG
+        randomNum = ws1RNG.nextInt();
+        // Return time value calculated
+        return calculateTime(ws1Time, randomNum);
+    }
+    public double ws2RNG(){
+        double randomNum = 0, ws2Time = 0;
+        // Get next int from respective RNG
+        randomNum = ws2RNG.nextInt();
+        // Return time value calculated
+        return calculateTime(ws2Time, randomNum);
+    }
+    public double ws3RNG(){
+        double randomNum = 0, ws3Time = 0;
+        // Get next int from respective RNG
+        randomNum = ws3RNG.nextInt();
+        // Return time value calculated
+        return calculateTime(ws3Time, randomNum);
+    }
+    public double calculateTime(double lambda, double randomNum){
+        double time, randomD;
+        // Calc within bound by dividing by max value
+        randomD = randomNum/Integer.MAX_VALUE;
+        // CDF calculation for ws1Time
+        time = (-1/ws1Lambda)*Math.log(1-randomD);
+        return time;
+    }
     public int createProduct(){
         int flag1 = 0, flag2 = 0;
         int index1 = 0, index2 = 0;

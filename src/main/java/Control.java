@@ -123,9 +123,13 @@ public class Control {
 		
 		if (inspector2.getStatus() == 2) {
 			//Inspector2 is blocked at this time
-			int idleTime = inspector2.getIdleTime_ms();
-			inspector2.setIdleTime_ms(idleTime+1);
-			inspector2_totalIdleTime++;
+			//Attempt to finish component, if blocked add to block time
+			finishComponent(inspector2, inspector2.getComponent());
+			if (inspector2.getStatus() == 2) {
+				int idleTime = inspector2.getIdleTime_ms();
+				inspector2.setIdleTime_ms(idleTime+1);
+				inspector2_totalIdleTime++;
+			}
 			//check full flag to make product
 
 			
@@ -312,7 +316,7 @@ public class Control {
 			
 		} else if (comp.getComponentNum() == 2) {
 			//Component 2 has finished being inspected
-			//For ties, priority is: W1 > W2 > W3
+			//There is only one place to send components
 			//temporarily set status back to idle
 			inspector.setStatus(0);
 			//There is only 1 place to send component 2

@@ -22,7 +22,10 @@ public class Control {
 	private static final double ws1Lambda = 0.2171;
 	private static final double ws2Lambda = 0.2172;
 	private static final double ws3Lambda = 0.09015;
-	
+	private static int p1 = 0;
+	private static int p2 = 0;
+	private static int p3 = 0;
+
 	public static void main(String args[]) {
 		
 		System.out.println("Beginning simulation");
@@ -47,6 +50,7 @@ public class Control {
 			System.out.println("time : " + sim_time_min);
 			System.out.println("inspector1 status : " + inspector1.getStatus() + ", inspector 2 status: " + inspector2.getStatus());
 			System.out.println("inspector1 total idle time : " + inspector1_totalIdleTime/60 + ", inspector2 total idle time : " + inspector2_totalIdleTime/60 + "\n");
+			System.out.println("Product 1 created : " + p1 + ", Product 2 created : " + p2 + ", Product 3 created : " + p3);
 		}
 		
 		//Check status of inspector 
@@ -150,6 +154,7 @@ public class Control {
 				workstation1.setProcessingTime(Ptime-1);
 			} else if (Ptime == 0) {
 				System.out.println("["+ sim_time_min +"]["+ sim_time_sec +"] WS1 has finished creating a product at time " + sim_time_min);
+				p1++;
 				System.out.println("["+ sim_time_min +"] WS1 buffer size (before finishing): " + workstation1.getBufferSize(1));
 				workstation1.finishProduct(1); //this method sets status back to 0, and removes comps from buffer
 				
@@ -167,6 +172,7 @@ public class Control {
 				workstation2.setProcessingTime(Ptime-1);
 			} else if (Ptime == 0) {
 				System.out.println("["+ sim_time_min +"] WS2 has finished creating a product at time " + sim_time_min);
+				p2++;
 				System.out.println("["+ sim_time_min +"] WS2 buffer1 size (before finishing): " + workstation2.getBufferSize(1) + ", WS2 buffer2 size:" + workstation2.getBufferSize(2));
 				workstation2.finishProduct(2); //this method sets status back to 0, and removes comps from buffer
 				
@@ -178,6 +184,7 @@ public class Control {
 			workstation3.setStatus(1);
 			workstation3.setProcessingTime((int) (calculateProcessingTime(3) * 60));
 			System.out.println("["+ sim_time_min +"] WS3 is beginning to process an item at time " + sim_time_min +", time remaining: " + workstation3.getProcessTime());
+			p3++;
 			System.out.println("["+ sim_time_min +"] WS3 buffer1 size: "+ workstation3.getBufferSize(1) +", WS3 buffer3 size: " + workstation3.getBufferSize(3));
 		} else if (workstation3.getStatus() == 1) {
 			int Ptime = workstation3.getProcessTime();

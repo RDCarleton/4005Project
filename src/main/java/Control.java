@@ -25,6 +25,7 @@ public class Control {
 	private static int p1 = 0;
 	private static int p2 = 0;
 	private static int p3 = 0;
+	private static int lastStation = 0;
 
 	public static void main(String args[]) {
 		
@@ -297,6 +298,8 @@ public class Control {
 			
 			//send component to the shortest buffer in ranked priority
 			//if buffers are full, inspector is blocked
+			// Original Policy
+			/**
 				if (bufferSize1 == 0) {
 					workstation1.addToBuffer(comp);
 					System.out.println("["+ sim_time_min +"] Component 1 has been inspected, sent to WS1, buffer size: " + workstation1.getBufferSize(1));
@@ -320,7 +323,69 @@ public class Control {
 					//set status to block
 					inspector.setStatus(2);
 				}
-			
+			*/
+			// Alternative policy
+			// Priority is to send a component to workstation 1, 2, 3 in order. If workstation buffer is full then
+			// prioritize the next workstation in order.
+			// If buffer is full then block
+			if (lastStation == 0 || lastStation == 3){
+				if (bufferSize1 == 0 || bufferSize1 == 1) {
+					workstation1.addToBuffer(comp);
+					System.out.println("["+ sim_time_min +"] Component 1 has been inspected, sent to WS1, buffer size: " + workstation1.getBufferSize(1));
+					lastStation = 1;
+				} else if (bufferSize2 == 0 || bufferSize2 == 1) {
+					workstation2.addToBuffer(comp);
+					System.out.println("["+ sim_time_min +"] Component 1 has been inspected, sent to WS2, buffer size: " + workstation2.getBufferSize(1));
+					lastStation = 2;
+				} else if (bufferSize3 == 0 || bufferSize3 == 1) {
+					workstation3.addToBuffer(comp);
+					System.out.println("["+ sim_time_min +"] Component 1 has been inspected, sent to WS3, buffer size: " + workstation3.getBufferSize(1));
+					lastStation = 3;
+				} else {
+					//System.out.println("["+sim_time_ms+"] Inspector 1 is blocked!");
+					//set status to block
+					inspector.setStatus(2);
+				}
+			}
+			else if (lastStation == 1){ // Last component sent to workstation 1, start at workstation 2
+				if (bufferSize2 == 0 || bufferSize2 == 1) {
+					workstation2.addToBuffer(comp);
+					System.out.println("["+ sim_time_min +"] Component 1 has been inspected, sent to WS2, buffer size: " + workstation2.getBufferSize(1));
+					lastStation = 2;
+				} else if (bufferSize3 == 0 || bufferSize3 == 1) {
+					workstation3.addToBuffer(comp);
+					System.out.println("["+ sim_time_min +"] Component 1 has been inspected, sent to WS3, buffer size: " + workstation3.getBufferSize(1));
+					lastStation = 3;
+				} else if (bufferSize1 == 0 || bufferSize1 == 1) {
+					workstation1.addToBuffer(comp);
+					System.out.println("["+ sim_time_min +"] Component 1 has been inspected, sent to WS1, buffer size: " + workstation1.getBufferSize(1));
+					lastStation = 1;
+				} else {
+					//System.out.println("["+sim_time_ms+"] Inspector 1 is blocked!");
+					//set status to block
+					inspector.setStatus(2);
+				}
+			}
+			else if (lastStation == 2){
+				if (bufferSize3 == 0 || bufferSize3 == 1) {
+					workstation3.addToBuffer(comp);
+					System.out.println("["+ sim_time_min +"] Component 1 has been inspected, sent to WS3, buffer size: " + workstation3.getBufferSize(1));
+					lastStation = 3;
+				} else if (bufferSize2 == 0 || bufferSize2 == 1) {
+					workstation2.addToBuffer(comp);
+					System.out.println("["+ sim_time_min +"] Component 1 has been inspected, sent to WS2, buffer size: " + workstation2.getBufferSize(1));
+					lastStation = 2;
+				} else if (bufferSize1 == 0 || bufferSize1 == 1) {
+					workstation1.addToBuffer(comp);
+					System.out.println("["+ sim_time_min +"] Component 1 has been inspected, sent to WS1, buffer size: " + workstation1.getBufferSize(1));
+					lastStation = 1;
+				} else {
+					//System.out.println("["+sim_time_ms+"] Inspector 1 is blocked!");
+					//set status to block
+					inspector.setStatus(2);
+				}
+			}
+
 		} else if (comp.getComponentNum() == 2) {
 			//Component 2 has finished being inspected
 			//There is only one place to send components
